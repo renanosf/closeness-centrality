@@ -1,0 +1,16 @@
+{
+	"plugins": [
+  	],
+  	"env": {
+		"node" : true,
+		"browser" : true
+	},
+  	"rules": {
+	    "indent" : 0,
+	    "func-style" : [2,"expression"]
+  	},
+  	"globals" : {
+  		"FB" : true
+  	},
+    "extends": "eslint"
+}
