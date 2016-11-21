@@ -1,5 +1,55 @@
 "use strict";
 
+var Graph = (function() {
+
+    var users = "";
+    var getMutualFriends = function(id) {
+        return new Promise(function(resolve,reject){
+            FB.api(
+                "/" + id,
+                {
+                    "fields": "context.fields(mutual_friends)"
+                },
+                function (response) {
+                    if (response && !response.error) {
+                        var friends = response.context.mutual_friends.data;
+                        for(var i = 0; i < friends.length; i++){
+                            users += id + " " + friends[i].id + "\r\n";
+                        }
+                        resolve(id);
+                    }else{
+                        reject("Error getting mutual friends");
+                    }
+                }
+            );
+        });
+    };
+
+    return {
+        initGraph : function(data){
+            return new Promise(function(resolve,reject){
+                var mutualFriendsFuncs = [];
+
+                for(var i = 0; i < data.length; i++){
+                    users += User.getUserId() + " " + data[i].id + "\r\n";
+                    mutualFriendsFuncs.push(getMutualFriends(data[i].id));
+                }
+
+                Promise.all(mutualFriendsFuncs)
+                .then(function(res){
+                    console.log(users);
+                    resolve(res);
+                    document.getElementById("message").style.display = "none";
+                })
+                .catch(function(err){
+                    reject(err);
+                });
+            });
+        }
+    };
+
+})();
+
 var User = (function() {
 
     var user = null;
@@ -20,6 +70,14 @@ var getListOfFriends = function() {
         function(response) {
             if (response && !response.error) {
                 console.log(response);
+                document.getElementById("message").innerHTML = "Recebendo lista de amigos em comum..."
+                Graph.initGraph(response.data)
+                .then(function(res){
+                    console.log(res);
+                })
+                .catch(function(err){
+                    document.getElementById("message").innerHTML = err;
+                });
             }
         }
     );
@@ -29,7 +87,8 @@ var getUserInfo = function() {
     FB.api("/me", function(response) {
         console.log(response);
         User.setUser(response);
-        getListOfFriends();
+        document.getElementById("message").innerHTML = "Recebendo lista de amigos..."
+        getListOfFriends(response.id);
     });
 };
 
@@ -40,6 +99,7 @@ var statusChangeCallback = function(response) {
 
         console.log("conectado");
         document.getElementById("fb-login").style.display = "none";
+        document.getElementById("message").innerHTML = "Recebendo informações do usuário..."
         getUserInfo();
 
     } else if (response.status === "not_authorized") {

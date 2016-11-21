@@ -8,8 +8,11 @@
 <body>
 
 	<!-- Login Button Facebook -->
-	<div id="fb-root"></div>
 	<fb:login-button id="fb-login" scope="public_profile,email,user_friends" onlogin="checkLoginState();"></fb:login-button>
+
+	<div id="message-container">
+		<p id="message"></p>
+	</div>
 	
 	<script src="app.js"></script>
 
