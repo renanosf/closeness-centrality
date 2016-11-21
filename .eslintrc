@@ -10,7 +10,8 @@
 	    "func-style" : [2,"expression"]
   	},
   	"globals" : {
-  		"FB" : true
+  		"FB" : true,
+      "Promise" : true
   	},
     "extends": "eslint"
 }
