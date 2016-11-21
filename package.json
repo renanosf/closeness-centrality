@@ -24,7 +24,8 @@
   "homepage": "https://github.com/renanosf/closeness-centrality#readme",
   "dependencies": {
     "body-parser": "^1.15.2",
-    "express": "^4.14.0"
+    "express": "^4.14.0",
+    "yargs": "^6.4.0"
   },
   "devDependencies": {
     "eslint": "^3.10.2",
