@@ -130,22 +130,26 @@ var getListOfFriends = function() {
         function(response) {
             if (response && !response.error) {
                 console.log(response);
-                document.getElementById("message").innerHTML = "Recebendo lista de amigos em comum...";
-                Graph.initGraph(response.data)
-                .then(function(res) {
-                    Http.makeJsonRequest({file: res.slice(0, -1)}, "/edges")
-                    .then(function(res2) {
-                        console.log(res2);
-                        Draw.drawTable(res2);
+                document.getElementById("message").innerHTML = "Receiving list of friends...";
+                if (response.data.length > 0) {
+                    Graph.initGraph(response.data)
+                    .then(function(res) {
+                        Http.makeJsonRequest({file: res.slice(0, -1)}, "/edges")
+                        .then(function(res2) {
+                            console.log(res2);
+                            Draw.drawTable(res2);
+                        })
+                        .catch(function(err) {
+                            document.getElementById("message").innerHTML = err;
+                            document.getElementById("message").style.display = "block";
+                        });
                     })
                     .catch(function(err) {
                         document.getElementById("message").innerHTML = err;
-                        document.getElementById("message").style.display = "block";
                     });
-                })
-                .catch(function(err) {
-                    document.getElementById("message").innerHTML = err;
-                });
+                } else {
+                    document.getElementById("message").innerHTML = "Unable to retrieve list of friends";
+                }
             }
         }
     );
@@ -155,7 +159,7 @@ var getUserInfo = function() {
     FB.api("/me", function(response) {
         console.log(response);
         User.setUser(response);
-        document.getElementById("message").innerHTML = "Recebendo lista de amigos...";
+        document.getElementById("message").innerHTML = "Receiving list of friends...";
         getListOfFriends(response.id);
     });
 };
@@ -166,8 +170,7 @@ var statusChangeCallback = function(response) {
     if (response.status === "connected") {
 
         console.log("conectado");
-        document.getElementById("fb-login").style.display = "none";
-        document.getElementById("message").innerHTML = "Recebendo informações do usuário...";
+        document.getElementById("message").innerHTML = "Receiving user information...";
         getUserInfo();
 
     } else if (response.status === "not_authorized") {
