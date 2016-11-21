@@ -22,7 +22,7 @@ npm install
 
 Run pm2
 ```
-pm2 start server.js --name Closeness
+pm2 start server.js --name Closeness --watch
 ```
 
 Go to your browser and access http://localhost:3000. Click login with facebook and enter the user test
@@ -31,7 +31,7 @@ joao_lrhvhtx_da_silva@tfbnw.net
 Closeness
 ```
 
-You'll see a list of users ordered by closeness centraity. Similarly you can calculate closeness centrality by providing a file direct to edges.js
+You'll see a list of users ordered by closeness centrality. Similarly you can calculate closeness centrality by providing a file direct to edges.js
 ```
 node edges.js --file edges.txt
 ```
